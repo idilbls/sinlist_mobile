@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-class List {
-  List({
+class TodoList {
+  TodoList({
     this.id,
     this.name,
     this.isActive,
@@ -14,7 +14,7 @@ class List {
   DateTime creationTime;
 
 
-  factory List.fromJson(Map<String, dynamic> json) => List(
+  factory TodoList.fromJson(Map<String, dynamic> json) => TodoList(
       id: json["id"],
       name: json["name"],
       isActive: json["isActive"],

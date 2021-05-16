@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-class List {
-  List({
+class ListItem {
+  ListItem({
     this.id,
     this.name,
     this.description,
@@ -20,7 +20,7 @@ class List {
   int listId;
 
 
-  factory List.fromJson(Map<String, dynamic> json) => List(
+  factory ListItem.fromJson(Map<String, dynamic> json) => ListItem(
       id: json["id"],
       name: json["name"],
       description: json["description"],
