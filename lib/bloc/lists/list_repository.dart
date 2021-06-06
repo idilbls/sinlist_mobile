@@ -1,39 +1,106 @@
-import 'dart:async';
+import 'package:flutter/cupertino.dart';
+import 'package:sinlist_mobile/core/bloc/base_repository.dart';
+import 'package:sinlist_mobile/core/http/api_provider.dart';
+import 'package:sinlist_mobile/core/http/api_response.dart';
+import 'package:sinlist_mobile/core/http/api_result.dart';
+import 'package:sinlist_mobile/core/http/network_exceptions.dart';
 import 'package:sinlist_mobile/data/lists/list.dart';
 import 'package:sinlist_mobile/data/lists/listItem.dart';
-import '../sinlist_provider.dart';
 
-abstract class IListRepository {
-  Future<List<TodoList>> AddList(TodoList list);
-  Future<ListItem> AddListItem(ListItem listItem);
-  Future DeleteListItem(int itemId);
-  Future DeleteListWithItem(int listId);
-  Future<List<ListItem>> GetListWithItems(int listId);
-  Future<TodoList> UpdateList(TodoList todoList);
-  Future<ListItem> UpdateListItem (ListItem listItem);
-}
+class ListRepository implements BaseRepository {
+  ListRepository({@required this.apiProvider});
+  ApiProvider apiProvider;
 
-class ListRepository extends IListRepository {
-  Future<List<TodoList>> AddList(TodoList list) async {
-    return await SinlistProvider.AddList(list);
+  Future<ApiResult<TodoList>> addList(TodoList todoList) async {
+    try {
+      final json = await apiProvider.post(
+        "list/add_list",
+        data: todoList.toJson(),
+      );
+      var apiResponse = ApiResponse.fromJson(json);
+      if (apiResponse.success) {
+        var response = TodoList.fromJson(apiResponse.result);
+        return ApiResult.success(data: response);
+      } else {
+        throw new Exception(apiResponse.error);
+      }
+    } catch (e) {
+      return ApiResult.failure(error: NetworkExceptions.getDioException(e));
+    }
   }
-  Future<ListItem> AddListItem(ListItem listItem) async{
-    return await SinlistProvider.AddListItem(listItem);
+
+  Future<ApiResult<ListItem>> addListItem(ListItem listItem) async {
+    try {
+      final json = await apiProvider.post(
+        "list/add_list_item",
+        data: listItem.toJson(),
+      );
+      var apiResponse = ApiResponse.fromJson(json);
+      if (apiResponse.success) {
+        var response = ListItem.fromJson(apiResponse.result);
+        return ApiResult.success(data: response);
+      } else {
+        throw new Exception(apiResponse.error);
+      }
+    } catch (e) {
+      return ApiResult.failure(error: NetworkExceptions.getDioException(e));
+    }
   }
-  Future DeleteListItem(int itemId) async{
-    return await SinlistProvider.DeleteListItem(itemId);
+
+  Future<ApiResult<List<ListItem>>> getListWithItems(int listId) async {
+    try {
+      final json = await apiProvider.post(
+        "list/get_list_with_item",
+        data: listId,
+      );
+      ApiResponse apiResponse = ApiResponse.fromJson(json);
+      if (apiResponse.success) {
+        List<ListItem> listItemList = List<ListItem>.from((apiResponse.result as List).map((e) => ListItem.fromJson(e)));
+        return ApiResult.success(data: listItemList);
+      } else {
+        throw new Exception(apiResponse.error);
+      }
+    } catch (e) {
+      return ApiResult.failure(error: NetworkExceptions.getDioException(e));
+    }
   }
-  Future DeleteListWithItem(int listId) async{
-    return await SinlistProvider.DeleteListWithItem(listId);
+
+  Future<ApiResult<TodoList>> updateList(TodoList todoList) async {
+    try {
+      final json = await apiProvider.post(
+        "list/update_list",
+        data: todoList.toJson(),
+      );
+      var apiResponse = ApiResponse.fromJson(json);
+      if (apiResponse.success) {
+        var response = TodoList.fromJson(apiResponse.result);
+        return ApiResult.success(data: response);
+      } else {
+        throw new Exception(apiResponse.error);
+      }
+    } catch (e) {
+      return ApiResult.failure(error: NetworkExceptions.getDioException(e));
+    }
   }
-  Future<List<ListItem>> GetListWithItems(int listId) async{
-    return await SinlistProvider.GetListWithItems(listId);
+
+  Future<ApiResult<ListItem>> updateListItem(ListItem listItem) async {
+    try {
+      final json = await apiProvider.post(
+        "list/update_item",
+        data: listItem.toJson(),
+      );
+      var apiResponse = ApiResponse.fromJson(json);
+      if (apiResponse.success) {
+        var response = ListItem.fromJson(apiResponse.result);
+        return ApiResult.success(data: response);
+      } else {
+        throw new Exception(apiResponse.error);
+      }
+    } catch (e) {
+      return ApiResult.failure(error: NetworkExceptions.getDioException(e));
+    }
   }
-  Future<TodoList> UpdateList(TodoList todoList) async{
-    return await SinlistProvider.UpdateList(todoList);
-  }
-  Future<ListItem> UpdateListItem (ListItem listItem) async{
-    return await SinlistProvider.UpdateListItem(listItem);
-  }
+
+  //deleteler kaldı
 
 }
