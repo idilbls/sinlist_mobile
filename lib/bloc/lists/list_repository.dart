@@ -103,4 +103,27 @@ class ListRepository implements BaseRepository {
 
   //deleteler kaldı
 
+  Future<ApiResult<bool>> deleteListWithItem(int listId) async {
+    try {
+      final json = await apiProvider.post(
+        "list/delete_list_with_item",
+        data: listId,
+      );
+      return ApiResult.success(data: true);
+    } catch (e) {
+      return ApiResult.failure(error: NetworkExceptions.getDioException(e));
+    }
+  }
+
+  Future<ApiResult<bool>> deleteListItem(int itemId) async {
+    try {
+      final json = await apiProvider.post(
+        "list/delete_list_item",
+        data: itemId,
+      );
+      return ApiResult.success(data: true);
+    } catch (e) {
+      return ApiResult.failure(error: NetworkExceptions.getDioException(e));
+    }
+  }
 }
