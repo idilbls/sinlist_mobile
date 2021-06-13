@@ -101,8 +101,6 @@ class ListRepository implements BaseRepository {
     }
   }
 
-  //deleteler kaldı
-
   Future<ApiResult<bool>> deleteListWithItem(int listId) async {
     try {
       final json = await apiProvider.post(
